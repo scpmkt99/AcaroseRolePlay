@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acarose 降醣佳 - 雙重配對情境模擬抽籤 App</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f4f7f6;
+            --accent-color: #e67e22;
+            --text-color: #2c3e50;
+            --border-color: #dcdde1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+        }
+
+        body {
+            background-color: #e9ecef;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px 10px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #7f8c8d;
+            font-size: 15px;
+        }
+
+        .action-area {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 50px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 35px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        button:hover {
+            background-color: #004085;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 86, 179, 0.4);
+        }
+
+        button.next-btn {
+            background-color: #27ae60;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+            margin-top: 15px;
+        }
+
+        button.next-btn:hover {
+            background-color: #219653;
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 10px;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badge-title {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .section-card {
+            background-color: var(--secondary-color);
+            border-left: 6px solid var(--primary-color);
+            padding: 20px 22px;
+            margin-bottom: 30px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .section-card.doctor {
+            border-left-color: var(--accent-color);
+        }
+
+        h3 {
+            margin-bottom: 12px;
+            color: #111;
+            font-size: 22px; 
+            font-weight: 800;
+        }
+
+        .desc-text {
+            font-size: 17px; 
+            color: #333;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        .quote-box {
+            font-style: italic;
+            color: #b33939; 
+            background: #fff;
+            padding: 15px 18px;
+            border-left: 4px dashed var(--accent-color);
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 18px; 
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #95a5a6;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎲 Acarose 降醣佳</h1>
+        <p>業務外勤 Role-Play 雙重配對情境抽籤系統</p>
+    </header>
+
+    <div class="action-area" id="initActionArea">
+        <button onclick="drawScenario()">🎲 開始情境抽籤</button>
+    </div>
+
+    <div id="resultBox" class="result-box">
+        
+        <div class="badge-title">軸線一：目前醫院狀態</div>
+        <div class="section-card">
+            <h3 id="hospitalTitle"></h3>
+            <p class="desc-text" id="hospitalDesc"></p>
+        </div>
+
+        <div class="badge-title" style="background-color: var(--accent-color);">軸線二：醫師用藥態度想法</div>
+        <div class="section-card doctor">
+            <h3 id="doctorTitle"></h3>
+            <p class="desc-text" id="doctorMind"></p>
+            <div class="quote-box" id="doctorQuote"></div>
+        </div>
+
+        <div class="action-area" style="margin-top: 20px;">
+            <button class="next-btn" onclick="drawScenario()">下一回合 🎲</button>
+        </div>
+    </div>
+
+    <footer>
+        生達化學製藥股份有限公司 • 營二部教育訓練小組特製
+    </footer>
+</div>
+
+<script>
+    // 1. 軸線一：目前醫院狀態
+    const hospitals = [
+        {
+            title: "原廠藥（拜耳醣祿錠）退出市場後的用藥缺口",
+            desc: "院內正面臨原廠藥 Glucobay 退出健保市場後的處方轉換與缺藥痛點。同仁需把握時機，推廣平穩平移轉換至生達 Acarose 的優勢。"
+        },
+        {
+            title: "院內劑量規格為 50mg",
+            desc: "目前院內進藥品項僅有 Acarbose 50mg 規格。同仁今日目標是向醫師推廣引進或開立「100mg 新規格」的必要性與高劑量調整的便利性。"
+        },
+        {
+            title: "院內無此成分",
+            desc: "目前院內完全沒有引進任何 Acarbose 成分的藥品。同仁今日首要任務是突破零基底，向醫師提出進藥申請（提藥）的需求與實證。"
+        }
+    ];
+
+    // 2. 軸線二：醫師可能的用藥態度和使用想法
+    const doctors = [
+        {
+            title: "對腸胃道副作用（GI side effects）的疑慮",
+            mind: "醫師認同藥物的機轉，但非常擔心病人服用後回診抱怨嚴重的腹脹、頻繁排氣（放屁）甚至長輩漏便等社交尷尬與腸胃不適困擾。",
+            quote: "「這成分吃了病人一直反映肚子脹、瘋狂放屁，在診間抱怨連連，你有什麼方法能讓病人不要有這麼嚴重的腸胃反應？」"
+        },
+        {
+            title: "服藥頻次與遵從性考量",
+            mind: "醫師認為一天要吃三次（TID），而且每次都必須在吃第一口飯時（With first bite）吞服，用法過於繁瑣，極易導致病人忘記吃，回診剩藥率高。",
+            quote: "「一天要吃三次，還要配第一口飯！病人上班上學根本記不得，每次雲端藥歷看都剩一堆藥，遵從性實在太低了...」"
+        },
+        {
+            title: "Acarbose為老藥也非第一線選擇",
+            mind: "醫師臨床處方習慣偏好近年推陳出新的新型降血糖藥（如 SGLT2i、DPP4i、GLP-1 RA），認為 Acarbose 屬於傳統老藥，已非核心首選。",
+            quote: "「現在各類新型降糖藥實證那麼多，Acarbose 已經是幾十年的老藥了，在最新指南也非第一線選擇，我為什麼還要特別開它？」"
+        },
+        {
+            title: "認同Acarbose可改善餐後血糖飆升",
+            mind: "醫師非常重視餐後血糖（PC BG）與血糖波動度，特別認同藥物能針對亞洲人高澱粉（碳水化合物）飲食或長輩吃流質軟爛食物造成的餐後飆糖進行改善。",
+            quote: "「我們亞洲人愛吃澱粉，很多泡茶、吃稀飯的長輩餐後血糖（PC）衝得非常高，針對這類精準控制餐後血糖的需求，這藥確實有其獨特定位。」"
+        },
+        {
+            title: "少用此成分，須說明藥品的安全性和其治療定位",
+            mind: "醫師臨床極少處方此成分。同仁需要從頭切入，深入淺出地向醫師說明藥品不經肝腎代謝的安全性，以及在多重合併用藥治療中的明確定位。",
+            quote: "「我平常很少開這個成分的藥，不太熟悉。這藥安全性高嗎？肝腎功能不好的能用嗎？你說說它在合併治療該放在什麼定位？」"
+        }
+    ];
+
+    // 抽籤主程式
+    function drawScenario() {
+        // 隱藏初始抽籤區
+        document.getElementById("initActionArea").style.display = "none";
+
+        // 隨機抽選
+        const hIndex = Math.floor(Math.random() * hospitals.length);
+        const dIndex = Math.floor(Math.random() * doctors.length);
+
+        const selectedHospital = hospitals[hIndex];
+        const selectedDoctor = doctors[dIndex];
+
+        // 填入資料
+        document.getElementById("hospitalTitle").innerText = "• " + selectedHospital.title;
+        document.getElementById("hospitalDesc").innerText = selectedHospital.desc;
+
+        document.getElementById("doctorTitle").innerText = "• " + selectedDoctor.title;
+        document.getElementById("doctorMind").innerText = selectedDoctor.mind;
+        document.getElementById("doctorQuote").innerText = selectedDoctor.quote;
+
+        // 顯示結果區
+        const resultBox = document.getElementById("resultBox");
+        resultBox.style.display = "block";
+        
+        // 每次抽籤時重新觸發動畫效果
+        resultBox.style.animation = 'none';
+        resultBox.offsetHeight; /* 觸發重繪 */
+        resultBox.style.animation = null;
+
+        // 平滑滾動到上方
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
